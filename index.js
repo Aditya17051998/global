@@ -133,7 +133,10 @@ app.post("/", async(req, res) => {
 
     try {
         let ans=await sendMail(req.body);
-        res.send(ans);
+        return res.json(200,{
+            data:ans
+        });
+        //res.send(ans);
     }
     catch (err) {
       return res.json(500, {
