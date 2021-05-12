@@ -19,6 +19,8 @@ app.use(cors());
 
 //////// set ket in sendgrid client ///
 SgClient.setApiKey(api);
+sgMail.setApiKey(api);
+sgMail.setSubstitutionWrappers("{", "}");
 ///////////// final response message ////////////////
 const ResponseMessage = {
   status: 200,
@@ -61,7 +63,14 @@ success and failure emails may not be accurate",
     personalizations.push(tempData);
     
 
-   })
+   });
+  //  const msg = {
+  //   personalizations: personalizations,
+  //   from: "pachory1997@gmail.com",
+  //   subject: "Globalshala backend task",
+  //   html: htmlcontent,
+  //   attachments: attachments,
+  // };
       try{
             await axios({
             method:"post",
@@ -82,6 +91,8 @@ success and failure emails may not be accurate",
         });
         ////// use sleep function if you want to get accurate bounce emails
         //await sleep(60000);  /////////// to stop processing untill some emails get bounce 
+        //let data = await sgMail.send(msg);
+    //RetriveInvalidEmails(res, Emails);
         var results=await fetch(emails);    /////////// fetch bounce and sent emails seperately/////////
         return results;
       }catch(err){
@@ -104,8 +115,18 @@ async function fetch(emails){
     "accept": "application/json"
   }
 })
+// const request = {
+//   method: "GET",
+//   url: "/v3/suppression/bounces",
+// };
+// const reqDelete = {
+//   body: { delete_all: true },
+//   method: "DELETE",
+//   url: request.url,
+//   json: true,
+// };
 
-////////// to delete all bounce emails /////////////////
+//////// to delete all bounce emails /////////////////
 const reqDelete = {
   body: { delete_all: true },
   method: "DELETE",
@@ -113,6 +134,7 @@ const reqDelete = {
 };
 SgClient.request(reqDelete);
 //////////////// filtering bounce emails from all emails //////////////////
+//var data=await SgClient.request(reqDelete);
 data.data.map((value)=>{
   var x=emails.findIndex((y)=>{return y==value.email});
   emails.splice(x,1);
@@ -133,9 +155,7 @@ app.post("/", async(req, res) => {
 
     try {
         let ans=await sendMail(req.body);
-        return res.json(200,{
-            data:ans
-        });
+        return res.status(200).json(ans);
         //res.send(ans);
     }
     catch (err) {
