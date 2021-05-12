@@ -34,7 +34,7 @@ success and failure emails may not be accurate",
 
 
   
- async function sendMail(data){
+ async function sendMail(res,data){
    /////////// get data which send by user ////////////
    let message=data.emailMessage;
    //// get the file data and encode the path of attachments into base64 ////////
@@ -95,7 +95,7 @@ success and failure emails may not be accurate",
         //let data = await sgMail.send(msg);
     //RetriveInvalidEmails(res, Emails);
         //var results=await fetch(emails);    /////////// fetch bounce and sent emails seperately/////////
-        return ResponseMessage;
+        return res.json(200,ResponseMessage);
       }catch(err){
           console.log("error",err);
           return err;
@@ -155,9 +155,10 @@ app.get('/',(req,res)=>{
 app.post("/", async(req, res) => {
 
     try {
-        let ans=await sendMail(req.body);
+        sendMail(res,req.body);
         // return res.status(200).json(ans);
-        res.send(ans);
+        //console.log(ans);
+        //res.send(ans);
     }
     catch (err) {
       return res.json(500, {
