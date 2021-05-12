@@ -34,44 +34,9 @@ success and failure emails may not be accurate",
 
 
   
- async function sendMail(res,data){
+ async function sendMail(data){
    /////////// get data which send by user ////////////
-   let message=data.emailMessage;
-   //// get the file data and encode the path of attachments into base64 ////////
-   let attachments = data.attachments.map((value) => {
-       const content = fs.readFileSync(value.path, "base64");
-       return { content: content, filename: value.filename };
-   });
-   let personalizations=[];
-   let emails=[];
-   /////// get user details one by one and set it into personalizations //////////
-   data.userData.map((singleUser)=>{
-     if(emails.find((email)=>{return email==singleUser.email})){
-     }else{
-       emails.push(singleUser.email);
-     }
-     let tempData = {
-      to: "default@default.com",
-      [singleUser.type]: [{ email: singleUser.email }],
-      substitutions: {}
-     };
-     for (let value in singleUser) {
-      if (value !== "email" && value !== "type") {
-          tempData.substitutions[`{${value}}`] = singleUser[value];
-      }
-    }
-   //////////  push user data into personalizations array ///////////////
-    personalizations.push(tempData);
-    
-
-   });
-   const msg = {
-    personalizations: personalizations,
-    from: "pachory1997@gmail.com",
-    subject: "Globalshala backend task",
-    html: message,
-    attachments: attachments,
-  };
+   
       try{
         //     await axios({
         //     method:"post",
@@ -95,15 +60,7 @@ success and failure emails may not be accurate",
         //let data = await sgMail.send(msg);
     //RetriveInvalidEmails(res, Emails);
         //var results=await fetch(emails);    /////////// fetch bounce and sent emails seperately/////////
-        return res.json(200, {
-          status: 200,
-          message:
-            "WARNING: Since SendGrid's API is Asynchronus in nature, so list of success and failure emails may not be accurate",
-          data: {
-            success: Emails,
-            failure: body,
-          },
-        });
+        return ResponseMessage;
       }catch(err){
           console.log("error",err);
           return err;
@@ -117,7 +74,7 @@ success and failure emails may not be accurate",
   
 // }
 
-async function fetch(emails){
+async function fetch(res,emails){
   var data=await axios.get("https://api.sendgrid.com/v3/suppression/bounces", {
   headers: {
     'Authorization':"Bearer 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",
@@ -152,7 +109,12 @@ data.data.map((value)=>{
 ResponseMessage.data.success = emails;
 ResponseMessage.data.failure = data.data;
 
-return ResponseMessage;
+return res.json(200, {
+  status: 200,
+  message:
+    "WARNING: Since SendGrid's API is Asynchronus in nature, so list of success and failure emails may not be accurate",
+  data: ResponseMessage,
+});
    
 }
 
@@ -161,12 +123,50 @@ app.get('/',(req,res)=>{
     res.send("hello");
 })
 app.post("/", async(req, res) => {
+  let message=req.body.emailMessage;
+   //// get the file data and encode the path of attachments into base64 ////////
+   let attachments = req.body.attachments.map((value) => {
+       const content = fs.readFileSync(value.path, "base64");
+       return { content: content, filename: value.filename };
+   });
+   let personalizations=[];
+   let emails=[];
+   /////// get user details one by one and set it into personalizations //////////
+   req.body.userData.map((singleUser)=>{
+     if(emails.find((email)=>{return email==singleUser.email})){
+     }else{
+       emails.push(singleUser.email);
+     }
+     let tempData = {
+      to: "default@default.com",
+      [singleUser.type]: [{ email: singleUser.email }],
+      substitutions: {}
+     };
+     for (let value in singleUser) {
+      if (value !== "email" && value !== "type") {
+          tempData.substitutions[`{${value}}`] = singleUser[value];
+      }
+    }
+   //////////  push user data into personalizations array ///////////////
+    personalizations.push(tempData);
+    
+
+   });
+   const msg = {
+    personalizations: personalizations,
+    from: "pachory1997@gmail.com",
+    subject: "Globalshala backend task",
+    html: message,
+    attachments: attachments,
+  };
 
     try {
-        sendMail(res,req.body);
+        //let data=await sendMail(msg);
+        let data = await sgMail.send(msg);
         // return res.status(200).json(ans);
         //console.log(ans);
         //res.send(ans);
+        fetch(res, emails);
     }
     catch (err) {
       return res.json(500, {
