@@ -130,28 +130,7 @@ return ResponseMessage;
 //     res.send("hello");
 // })
 app.post("/", async(req, res) => {
-    let data={
-      userData:[{
-        email:"kushwahaa862@gmail.com",
-        name:"aditya",
-        status:"pass",
-        type:"to"
-      },
-      {
-        email:"ka@gmail.com",
-        name:"adya",
-        status:"pass",
-        type:"to"
-      },
-      {
-        email:"la@gmail.com",
-        name:"adya",
-        status:"pass",
-        type:"to"
-      }],
-      emailMessage:"hi {name} , <b>your result is {status}</b>",
-      attachments:[{filename:'krishna.jpg',path:__dirname+'/krishna.jpg'}]
-    }
+
     try {
         let ans=await sendMail(req.body);
         res.send(ans);
