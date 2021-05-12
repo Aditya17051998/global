@@ -65,37 +65,37 @@ success and failure emails may not be accurate",
     
 
    });
-  //  const msg = {
-  //   personalizations: personalizations,
-  //   from: "pachory1997@gmail.com",
-  //   subject: "Globalshala backend task",
-  //   html: htmlcontent,
-  //   attachments: attachments,
-  // };
+   const msg = {
+    personalizations: personalizations,
+    from: "pachory1997@gmail.com",
+    subject: "Globalshala backend task",
+    html: message,
+    attachments: attachments,
+  };
       try{
-            await axios({
-            method:"post",
-            url:"https://api.sendgrid.com/v3/mail/send",
-            headers:{
-                Authorization:"Bearer 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"
-            },
-            data:{
-                personalizations:personalizations,
-                from:{
-                    email:"pachory1997@gmail.com",
-                    name:"aadi"
-                },
-                attachments: attachments,
-                subject:"hii there",
-                content:[{type:"text/html",value:message}]
-            }
-        });
+        //     await axios({
+        //     method:"post",
+        //     url:"https://api.sendgrid.com/v3/mail/send",
+        //     headers:{
+        //         Authorization:"Bearer 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"
+        //     },
+        //     data:{
+        //         personalizations:personalizations,
+        //         from:{
+        //             email:"pachory1997@gmail.com",
+        //             name:"aadi"
+        //         },
+        //         attachments: attachments,
+        //         subject:"hii there",
+        //         content:[{type:"text/html",value:message}]
+        //     }
+        // });
         ////// use sleep function if you want to get accurate bounce emails
         //await sleep(60000);  /////////// to stop processing untill some emails get bounce 
-        //let data = await sgMail.send(msg);
+        let data = await sgMail.send(msg);
     //RetriveInvalidEmails(res, Emails);
-        var results=await fetch(emails);    /////////// fetch bounce and sent emails seperately/////////
-        return results;
+        //var results=await fetch(emails);    /////////// fetch bounce and sent emails seperately/////////
+        return ResponseMessage;
       }catch(err){
           console.log("error",err);
           return err;
@@ -156,8 +156,8 @@ app.post("/", async(req, res) => {
 
     try {
         let ans=await sendMail(req.body);
-        return res.status(200).json(ans);
-        //res.send(ans);
+        // return res.status(200).json(ans);
+        res.send(ans);
     }
     catch (err) {
       return res.json(500, {
