@@ -67,7 +67,7 @@ success and failure emails may not be accurate",
             method:"post",
             url:"https://api.sendgrid.com/v3/mail/send",
             headers:{
-                Authorization:`Bearer ${api}`
+                Authorization:"Bearer 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"
             },
             data:{
                 personalizations:personalizations,
@@ -100,7 +100,7 @@ success and failure emails may not be accurate",
 async function fetch(emails){
   var data=await axios.get("https://api.sendgrid.com/v3/suppression/bounces", {
   headers: {
-    'Authorization': `Bearer ${api}`,
+    'Authorization':"Bearer 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",
     "accept": "application/json"
   }
 })
