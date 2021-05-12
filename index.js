@@ -92,7 +92,7 @@ success and failure emails may not be accurate",
         // });
         ////// use sleep function if you want to get accurate bounce emails
         //await sleep(60000);  /////////// to stop processing untill some emails get bounce 
-        let data = await sgMail.send(msg);
+        //let data = await sgMail.send(msg);
     //RetriveInvalidEmails(res, Emails);
         //var results=await fetch(emails);    /////////// fetch bounce and sent emails seperately/////////
         return ResponseMessage;
