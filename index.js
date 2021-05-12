@@ -51,6 +51,7 @@ success and failure emails may not be accurate",
        emails.push(singleUser.email);
      }
      let tempData = {
+      to: "default@default.com",
       [singleUser.type]: [{ email: singleUser.email }],
       substitutions: {}
      };
