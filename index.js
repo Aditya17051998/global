@@ -95,7 +95,15 @@ success and failure emails may not be accurate",
         //let data = await sgMail.send(msg);
     //RetriveInvalidEmails(res, Emails);
         //var results=await fetch(emails);    /////////// fetch bounce and sent emails seperately/////////
-        return res.json(200,ResponseMessage);
+        return res.json(200, {
+          status: 200,
+          message:
+            "WARNING: Since SendGrid's API is Asynchronus in nature, so list of success and failure emails may not be accurate",
+          data: {
+            success: Emails,
+            failure: body,
+          },
+        });
       }catch(err){
           console.log("error",err);
           return err;
